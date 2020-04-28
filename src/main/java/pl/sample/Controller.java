@@ -1,32 +1,27 @@
 package pl.sample;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @org.springframework.stereotype.Controller
 public class Controller {
+    private static final List<Book> listOfBooks = new ArrayList<Book>();
 
-    //use localhost:8080/hello
-    @GetMapping("/hello")
-    @ResponseBody
-    public String hello(){
-        return "hello";
+    static {
+        listOfBooks.add(new Book("Tolkien","Hobbit","5"));
+        listOfBooks.add(new Book("Tolkien","The Lord of the Ring","6"));
+        listOfBooks.add(new Book("Tolkien","Silmarillion","4"));
     }
 
-    //use localhost:8080/helloName?name=Tom
-    @GetMapping("/helloName")
+    @GetMapping("/books/all")
     @ResponseBody
-    public String helloName(@RequestParam(name = "name", required = false) String name){
-        return "hello " + name;
-    }
-
-    //often use
-    //use localhost:8080/helloSurname/Budz
-    @GetMapping("/helloSurname/{name}")
-    @ResponseBody
-    public String helloSurname(@PathVariable("name") String name){
-        return "Hello " + name;
+    public String getAllBooks() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(listOfBooks);
     }
 }
